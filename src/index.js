@@ -1,6 +1,8 @@
 import axios from 'axios';
 import './sass/index.scss';
 import Notiflix from 'notiflix';
+import SimpleLightbox from "simplelightbox";
+import 'simplelightbox/dist/simple-lightbox.min.css'
 
 
 const refs = {
@@ -25,19 +27,17 @@ const fetchImg = async () => {
   try{
     const response = await axios.get(`${BASE_URL}?key=${KEY}&image_type=photo&q=${searchValue}&orientation=horizontal&safesearch=true&page=${page}&per_page=40`);
     console.log(response);
-    if (response.data.hits.length === 0) {
+    if (response.data.hits.length === 0 || searchValue === '') {
       Notiflix.Notify.info('Sorry, there are no images matching your search query. Please try again.');
     } else {
       createMarkup(response.data.hits);
-        
+      Notiflix.Notify.success(`Hooray! We found ${response.data.totalHits} images.`);
       if (response.data.hits.length === 40 && page === 1) {
       refs.buttonLoad.classList.remove('hide');
       } else if (response.data.hits.length < 40 && page !== 1) {
         refs.buttonLoad.classList.add('hide');
         Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
-        } else if (response.data.hits.length !== 0 && page === 1) {
-        Notiflix.Notify.success(`Hooray! We found ${response.data.totalHits} images.`);
-          }
+        } 
       }
   }
   catch (error) {
@@ -84,7 +84,16 @@ function createMarkup (data) {
    </div>
  </div>`), '');
   refs.galleryEl.insertAdjacentHTML('beforeend', result);
+  gallery.refresh();
 };
+
+
+
+
+let gallery = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionDelay: 250,
+});
 
 
 
