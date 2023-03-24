@@ -37,7 +37,7 @@ const fetchImg = async () => {
       } else if (response.data.hits.length < 40 && page !== 1) {
         refs.buttonLoad.classList.add('hide');
         Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
-        } 
+      } 
       }
   }
   catch (error) {
@@ -52,7 +52,6 @@ function onFormSubmit (event) {
   page = 1;
   refs.galleryEl.innerHTML = '';
   fetchImg()
-  event.currentTarget.reset();
 }
 
 
